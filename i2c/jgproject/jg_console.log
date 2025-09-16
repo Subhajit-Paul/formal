@@ -75,3 +75,15 @@
 2025-09-16 08:43:54.384028 (824833) lic__man INFO    Claim 'fpv' for 'session_0'.
 2025-09-16 08:43:54.384053 (824833) lic__man INFO    Claim 'fpv' for 'session_0/prove-0'.
 2025-09-16 08:43:57.093085 (824833) lic__man INFO    Unclaim everything for 'session_0/prove-0'.
+2025-09-16 08:49:38.761024 (824833) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 08:49:38.761153 (824833) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 08:49:39.891817 (824833) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 08:49:40.610122 (824833) lic__man INFO    Claim 'fpv' for 'session_0'.
+2025-09-16 08:49:40.610150 (824833) lic__man INFO    Claim 'fpv' for 'session_0/prove-0'.
+2025-09-16 08:49:43.098221 (824833) lic__man INFO    Unclaim everything for 'session_0/prove-0'.
+2025-09-16 08:58:09.268184 (824833) lic__man INFO    Entering idle state.
+2025-09-16 09:33:08.593836 (824833) main____ INFO    About to exit: requested from GUI
+2025-09-16 09:33:08.636832 (824833) session_ INFO    Analysis session 'session_0' disconnected.
+2025-09-16 09:33:08.639009 (824833) lic_core INFO    (1) checkin jasper_interactive
+2025-09-16 09:33:08.639241 (824833) lic_core INFO    (3) checkin jasper_fao
+2025-09-16 09:33:08.639379 (824833) main____ INFO    Exiting with status 0.

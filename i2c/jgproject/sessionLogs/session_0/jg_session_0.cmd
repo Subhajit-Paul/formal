@@ -46,3 +46,4 @@ prove -all
 # Exit JasperGold
 # exit -force
 
+include fail.tcl

@@ -20,6 +20,16 @@ clock wb_clk_i
 #reset wb_rst_i 
 reset -expr {wb_rst_i ~arst_i}
 
+# SP
+
+#assume -env {wb_dat_i[2:1] == 2'b00} -name reserved_bit_zero_for_data_input
+#assume -env {cr[2:1] == 2'b00} -name reserved_bit_zero_for_command_register
+#assume -env {sr[4:2] == 2'b00} -name reserved_bit_zero_for_status_register
+#assume -env {!(wb_dat_i[4] && wb_dat_i[5])} -name read_write_not_zero_at_same_time
+#assume -env {!(wb_dat_i[7] && wb_dat_i[6])} -name start_stop_not_zero_at_same_time
+#assume -env {ctr[5:0] == 6'h0} -name reserved_bit_zero_for_status_control_register
+
+
 # Run formal verification
 prove -all
 
