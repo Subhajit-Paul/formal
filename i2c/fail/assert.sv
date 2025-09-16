@@ -44,7 +44,7 @@ module i2c_assertions (
         // done signal: command completed, clear command register
         wire done;
 
-/*
+
 // arst_i
 
 property arst_ctr_en;
@@ -109,7 +109,6 @@ property arst_ctr_reset_1;
     $stable(ctr[5:0]);      // Reserved bits unchanged
 endproperty
 arst_ctr_reset_1_assert: assert property (arst_ctr_reset_1);
-*/
 
 // cr
 
@@ -269,7 +268,6 @@ property p_ctr_write;
 endproperty
 p_ctr_write_assert: assert property (p_ctr_write);
 
-/*
 // prer
 
 // Connectivity properties
@@ -432,7 +430,6 @@ property stop_condition;
   (cr[2] && scl_pad_o) |-> $rose(sda_pad_i);
 endproperty
 stop_condition_assert: assert property (stop_condition);
-*/
 
 // sr
 
@@ -542,7 +539,6 @@ property rxack_phase_aligned_1;
 endproperty
 rxack_phase_aligned_assert_1: assert property (rxack_phase_aligned_1);
 
-/*
 // txr
 
 property TXR_WriteConnectivity;
@@ -1220,7 +1216,7 @@ property wb_reset_write_ack_p;
   wb_rst_i |-> !(wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o);
 endproperty
 wb_reset_write_ack_p_assert: assert property (wb_reset_write_ack_p);
-*/
+
 endmodule
 
 // Bind the assertions to the I2C controller module
