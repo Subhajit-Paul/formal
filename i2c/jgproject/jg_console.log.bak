@@ -1,0 +1,107 @@
+2025-09-16 07:35:20.187524 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.187549 (821590) main____ INFO    Jasper version info
+2025-09-16 07:35:20.187552 (821590) main____ INFO      tool      : Jasper 2022.09
+2025-09-16 07:35:20.187554 (821590) main____ INFO      version   : 2022.09p002 64 bits
+2025-09-16 07:35:20.187555 (821590) main____ INFO      build date: 2022.11.24 12:29:17 UTC
+2025-09-16 07:35:20.187556 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.187557 (821590) main____ INFO    Runtime info:
+2025-09-16 07:35:20.187558 (821590) main____ INFO      platform  : Linux 4.18.0-553.47.1.el8_10.x86_64 x86_64
+2025-09-16 07:35:20.187560 (821590) main____ INFO      hostname  : Cadence_SERVER
+2025-09-16 07:35:20.187561 (821590) main____ INFO      pid       : 821590
+2025-09-16 07:35:20.187562 (821590) main____ INFO      arguments : '-style' 'windows' 'default.tcl'
+2025-09-16 07:35:20.187564 (821590) main____ INFO      locale    : ISO-8859-1
+2025-09-16 07:35:20.187565 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.187566 (821590) main____ INFO    System resource limits info:
+2025-09-16 07:35:20.187567 (821590) main____ INFO      virtual memory: unlimited
+2025-09-16 07:35:20.187568 (821590) main____ INFO      cpu time      : unlimited
+2025-09-16 07:35:20.187571 (821590) main____ INFO      processes     : 383127
+2025-09-16 07:35:20.187574 (821590) main____ INFO      stack size    : 33792000 B
+2025-09-16 07:35:20.187575 (821590) main____ INFO      core file size: 0 B
+2025-09-16 07:35:20.187576 (821590) main____ INFO      open files    : 1024
+2025-09-16 07:35:20.187577 (821590) main____ INFO      file size     : unlimited
+2025-09-16 07:35:20.187578 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.187580 (821590) main____ INFO    Memory statistics:
+2025-09-16 07:35:20.187581 (821590) main____ INFO      total physical memory  : 98146656 kB
+2025-09-16 07:35:20.187582 (821590) main____ INFO      free physical memory   : 67044000 kB
+2025-09-16 07:35:20.187583 (821590) main____ INFO      committed address space: 12837432 kB
+2025-09-16 07:35:20.187584 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.187978 (821590) main____ INFO    Important environment variables:
+2025-09-16 07:35:20.187982 (821590) main____ INFO      CDS_AHDLCMI_ENABLE    : 'YES'
+2025-09-16 07:35:20.187984 (821590) main____ INFO      CDS_AUTO_64BIT        : 'ALL'
+2025-09-16 07:35:20.187985 (821590) main____ INFO      CDS_INST_DIR          : '/home/install/IC618'
+2025-09-16 07:35:20.187987 (821590) main____ INFO      CDS_LIC_FILE          : '5280@192.168.72.54'
+2025-09-16 07:35:20.187988 (821590) main____ INFO      CDS_Netlisting_Mode   : 'Analog'
+2025-09-16 07:35:20.187989 (821590) main____ INFO      DISPLAY               : 'localhost:10.0'
+2025-09-16 07:35:20.187991 (821590) main____ INFO      EDITOR                : 'gedit'
+2025-09-16 07:35:20.187992 (821590) main____ INFO      JASPERHOME            : '/home/install/JASPER2209'
+2025-09-16 07:35:20.187994 (821590) main____ INFO      JASPER_INSTALL_DIR    : '/home/install/JASPER2209'
+2025-09-16 07:35:20.187995 (821590) main____ INFO      JASPER_KERNEL_CHECK   : '1'
+2025-09-16 07:35:20.187996 (821590) main____ INFO      JASPER_MACRO_LINEFILES: '1'
+2025-09-16 07:35:20.187998 (821590) main____ INFO      JASPER_OS_CHECK       : '1'
+2025-09-16 07:35:20.187999 (821590) main____ INFO      JAVA_HOME             : '/home/ansuman/tools/jdk1.7.0_79'
+2025-09-16 07:35:20.188000 (821590) main____ INFO      JG_MACRO_LINEFILES    : '1'
+2025-09-16 07:35:20.188002 (821590) main____ INFO      LANG                  : 'en_US'
+2025-09-16 07:35:20.188003 (821590) main____ INFO      LC_ADDRESS            : 'en_IN'
+2025-09-16 07:35:20.188004 (821590) main____ INFO      LC_IDENTIFICATION     : 'en_IN'
+2025-09-16 07:35:20.188006 (821590) main____ INFO      LC_MEASUREMENT        : 'en_IN'
+2025-09-16 07:35:20.188007 (821590) main____ INFO      LC_MONETARY           : 'en_IN'
+2025-09-16 07:35:20.188010 (821590) main____ INFO      LC_NAME               : 'en_IN'
+2025-09-16 07:35:20.188012 (821590) main____ INFO      LC_NUMERIC            : 'en_IN'
+2025-09-16 07:35:20.188013 (821590) main____ INFO      LC_PAPER              : 'en_IN'
+2025-09-16 07:35:20.188014 (821590) main____ INFO      LC_TELEPHONE          : 'en_IN'
+2025-09-16 07:35:20.188016 (821590) main____ INFO      LC_TIME               : 'en_IN'
+2025-09-16 07:35:20.188017 (821590) main____ INFO      LM_LICENSE_FILE       : '5280@192.168.72.54'
+2025-09-16 07:35:20.188018 (821590) main____ INFO    ----------------------------------------
+2025-09-16 07:35:20.188084 (821590) lic_core INFO    Initializing license system ...
+2025-09-16 07:35:20.188427 (821590) lic_core INFO    ... license system initialized.
+2025-09-16 07:35:20.189079 (821590) lic__man INFO    Claim 'main' for <ui>.
+2025-09-16 07:35:20.189092 (821590) lic_core INFO    (1) checking out 'jasper_interactive' ...
+2025-09-16 07:35:20.193039 (821590) lic_core INFO    ... (1) checkout succeeded
+2025-09-16 07:35:20.193057 (821590) lic__man INFO    Claim 'fpv' for <ui>.
+2025-09-16 07:35:20.193063 (821590) lic_core INFO    (2) checking out 'jasper_fpv' ...
+2025-09-16 07:35:20.193727 (821590) lic_core INFO    ... (2) checkout failed (error: -5) ("FLEXnet ERROR(-5, 0, 0): No such feature exists.")
+2025-09-16 07:35:20.193736 (821590) lic_core INFO    (3) checking out 'jasper_fao' ...
+2025-09-16 07:35:20.197089 (821590) lic_core INFO    ... (3) checkout succeeded
+2025-09-16 07:35:20.197228 (821590) main____ INFO    Tool inactivity delay is 480000 ms.
+2025-09-16 07:35:20.404191 (821590) lic__man INFO    Claim 'fpv' for <ui>.
+2025-09-16 07:35:20.512961 (821590) lic__man INFO    Unclaim 'fpv' for <ui>.
+2025-09-16 07:35:20.512975 (821590) lic__man INFO    Claim 'fpv' for <ui>.
+2025-09-16 07:35:20.514646 (821590) session_ INFO    Starting analysis session with session id 'session_0' (launcher: <local>) ...
+2025-09-16 07:35:20.515685 (821590) session_ INFO    Analysis session with session id 'session_0' started (pid: 821614)
+2025-09-16 07:35:46.710141 (821590) session_ INFO    Analysis session 'session_0' connected to the console (host: 127.0.0.1:51572)
+2025-09-16 07:35:48.027097 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:35:48.027264 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:42:08.418017 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:42:08.418116 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:46:11.924090 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:46:11.924138 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:47:35.422915 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:47:35.422986 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:51:40.440032 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:51:40.440096 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:52:35.766781 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:52:35.766861 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:56:08.582990 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:56:08.583099 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:56:53.489263 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:56:53.489330 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:57:22.729921 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 07:57:22.729979 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:57:23.912578 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 07:57:26.651648 (821590) lic__man INFO    Claim 'fpv' for 'session_0'.
+2025-09-16 07:57:26.651669 (821590) lic__man INFO    Claim 'fpv' for 'session_0/prove-0'.
+2025-09-16 07:57:33.410587 (821590) lic__man INFO    Unclaim everything for 'session_0/prove-0'.
+2025-09-16 08:31:14.432256 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 08:31:14.432441 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 08:32:09.398362 (821590) main____ INFO    Releasing console memory by request of analysis session 'session_0'.
+2025-09-16 08:32:09.398411 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 08:32:10.584030 (821590) lic__man INFO    Unclaim everything for 'session_0'.
+2025-09-16 08:32:13.458345 (821590) lic__man INFO    Claim 'fpv' for 'session_0'.
+2025-09-16 08:32:13.458371 (821590) lic__man INFO    Claim 'fpv' for 'session_0/prove-0'.
+2025-09-16 08:32:17.256861 (821590) lic__man INFO    Unclaim everything for 'session_0/prove-0'.
+2025-09-16 08:40:35.268238 (821590) lic__man INFO    Entering idle state.
+2025-09-16 08:42:54.374550 (821590) main____ INFO    About to exit: requested from GUI
+2025-09-16 08:42:54.415034 (821590) session_ INFO    Analysis session 'session_0' disconnected.
+2025-09-16 08:42:54.417938 (821590) lic_core INFO    (1) checkin jasper_interactive
+2025-09-16 08:42:54.418172 (821590) lic_core INFO    (3) checkin jasper_fao
+2025-09-16 08:42:54.418485 (821590) main____ INFO    Exiting with status 0.
