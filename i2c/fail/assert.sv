@@ -993,6 +993,11 @@ p_reset_busy_flag_assert: assert property (p_reset_busy_flag);
 
 // wb_stb_i
 
+property wb_stb_reset_inactive;
+  @(posedge wb_clk_i) (wb_rst_i || (arst_i ^ ARST_LVL)) |-> !wb_stb_i;
+endproperty
+wb_stb_reset_inactive_assert: assert property (wb_stb_reset_inactive);
+
 property wb_stb_ack_response;
   @(posedge wb_clk_i) (wb_stb_i && wb_cyc_i) |-> ##2 wb_ack_o;
 endproperty
@@ -1011,7 +1016,7 @@ property wb_stb_retention;
 endproperty
 wb_stb_retention_assert: assert property (wb_stb_retention);
 
-
+wb_stb_reset_inactive
 // wb_we_i
 
 

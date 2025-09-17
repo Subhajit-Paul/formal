@@ -188,11 +188,6 @@ p_cmd_reg_reserved_assert: assert property (p_cmd_reg_reserved);
 
 // wb_stb_i
 
-property wb_stb_reset_inactive;
-  @(posedge wb_clk_i) (wb_rst_i || (arst_i ^ ARST_LVL)) |-> !wb_stb_i;
-endproperty
-wb_stb_reset_inactive_assert: assert property (wb_stb_reset_inactive);
-
 property wb_stb_cyc_connectivity;
   @(posedge wb_clk_i) wb_stb_i |-> wb_cyc_i;
 endproperty

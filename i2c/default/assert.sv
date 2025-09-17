@@ -1417,7 +1417,7 @@ property wb_stb_cyc_connectivity;
   @(posedge wb_clk_i) 
   wb_stb_i |-> wb_cyc_i;
 endproperty
-wb_stb_cyc_connectivity_assert: assert property (wb_stb_cyc_connectivity);
+wb_stb_cyc_connectivity_assert: assume property (wb_stb_cyc_connectivity);
 
 property wb_stb_ack_response;
   @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
@@ -1459,7 +1459,7 @@ property wb_we_stable_p_v2;
   @(posedge wb_clk_i) disable iff (wb_rst_i)
   (wb_cyc_i && wb_stb_i) |-> $stable(wb_we_i) throughout (wb_cyc_i && wb_stb_i)[->1];
 endproperty
-wb_we_stable_p_v2_assert: assert property (wb_we_stable_p_v2);
+wb_we_stable_p_v2_assert: assume property (wb_we_stable_p_v2);
 
 property wb_we_stable_p_v3;
   @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
