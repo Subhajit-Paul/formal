@@ -7,7 +7,7 @@ analyze -v2k -f ${MAIN_PATH}/i2c.f
 
 # Analyze SystemVerilog top module
 analyze -sv12 ${MAIN_PATH}/rtl/i2c_master_top.sv
-analyze -sv12 ${MAIN_PATH}/reset_antecedent/assert.sv
+analyze -sv12 ${MAIN_PATH}/reset_antecedents/assert.sv
 
 # Initialize coverage
 # check_cov -init -model all
