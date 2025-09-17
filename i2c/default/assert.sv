@@ -1426,7 +1426,7 @@ endproperty
 wb_stb_ack_response_assert: assert property (wb_stb_ack_response);
 
 property wb_input_stability;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i ^ ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_stb_i && wb_cyc_i) |-> 
     ($stable(wb_adr_i) && $stable(wb_dat_i) && $stable(wb_we_i)) throughout ##[0:2] wb_ack_o;
 endproperty
