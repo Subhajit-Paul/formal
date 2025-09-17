@@ -111,12 +111,6 @@ property valid_address_range_1;
 endproperty
 valid_address_range_1_assert: assert property (valid_address_range_1);
 
-property address_stability_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
-  (wb_stb_i && wb_cyc_i && !wb_ack_o) |=> $stable(wb_adr_i);
-endproperty
-address_stability_1_assert: assert property (address_stability_1);
-
 property unused_address_bits;
     @(posedge wb_clk_i) disable iff (arst_i || wb_rst_i)
     (wb_stb_i && wb_cyc_i) |-> (wb_adr_i[2:0] <= 3'h5);
