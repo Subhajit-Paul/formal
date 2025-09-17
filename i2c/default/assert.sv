@@ -21,29 +21,18 @@ module i2c_assertions (
     input wire        scl_padoen_o,
     input wire        sda_pad_i,
     input wire        sda_pad_o,
-    input wire        sda_padoen_o
+    input wire        sda_padoen_o,
+    input reg  [15:0] prer,
+    input reg  [ 7:0] ctr,
+    input reg  [ 7:0] txr,
+    input wire [ 7:0] rxr,
+    input reg  [ 7:0] cr,
+    input wire [ 7:0] sr
 );
 
         // parameters
         parameter ARST_LVL = 1'b0; // asynchronous reset level
         parameter MAX_PERIOD = 32;
-
-
-        //
-        // variable declarations
-        //
-
-        // registers
-        reg  [15:0] prer; // clock prescale register
-        reg  [ 7:0] ctr;  // control register
-        reg  [ 7:0] txr;  // transmit register
-        wire [ 7:0] rxr;  // receive register
-        reg  [ 7:0] cr;   // command register
-        wire [ 7:0] sr;   // status register
-
-        // done signal: command completed, clear command register
-        wire done;
-
 
 // arst_i
 
@@ -204,8 +193,6 @@ assert property (@(posedge wb_clk_i) $bits(wb_adr_i) == 3);
 
 
 // wb_clk_i
-
-parameter MAX_PERIOD = 32;
 
 // Validity checks
 property wb_clk_valid_posedge;
@@ -1072,9 +1059,6 @@ we_stability_assert: assert property (we_stability);
 
 // wb_dat_i
 
-parameter CTRL_RESV_MASK = 8'hFC;
-parameter CMD_RESV_MASK = 8'hE8;
-
 property wb_dat_stable_until_ack;
   @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
   (wb_we_i && wb_stb_i && wb_cyc_i) |-> 
@@ -1500,7 +1484,4 @@ wb_reset_write_ack_p_assert: assert property (wb_reset_write_ack_p);
 
 
 endmodule
-
-// Bind the assertions to the I2C controller module
-bind i2c_master_top i2c_assertions i2c_assert_inst (.*);
 
