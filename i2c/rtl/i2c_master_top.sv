@@ -298,6 +298,6 @@ module i2c_master_top(
 	assign sr[0]   = irq_flag;
 
 		// hookup byte controller block
-	i2c_assertions assert (*);
+	i2c_assertions assertion_bind (*);
 
 endmodule
