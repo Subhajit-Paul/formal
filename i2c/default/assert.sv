@@ -60,7 +60,7 @@ assert property (@(posedge wb_clk_i) $bits(ctr) == 8);
 
 // Reserved bits persistence checks
 property p_ctr_reserved_zero;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (ctr[5:0] == 6'h0);
 endproperty
 p_ctr_reserved_zero_assert: assert property (p_ctr_reserved_zero);
@@ -72,7 +72,7 @@ assert property (@(posedge wb_clk_i) (1'b1) |-> ($bits(prer) == 16));
 
 // Alternative reset condition checks
 property prer_width_alt;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (1'b1) |-> ($bits(prer) == 16);
 endproperty
 prer_width_alt_assert: assert property (prer_width_alt);
@@ -122,7 +122,7 @@ assert property (@(posedge wb_clk_i) ($bits(sda_pad_i) == 1));
 
 assert property (@(posedge wb_clk_i) disable iff (wb_rst_i) $bits(sr) == 8);
 assert property (@(posedge wb_clk_i) $bits(sr) == 8);
-assert property (@(posedge wb_clk_i) disable iff (wb_rst_i || arst_i) (sr[4:2] == 3'b0));
+assert property (@(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL) (sr[4:2] == 3'b0));
 
 // txr
 
@@ -210,7 +210,7 @@ endproperty
 wb_clk_valid_posedge_alt_assert: assert property (wb_clk_valid_posedge_alt);
 
 property wb_clk_valid_continuous;
-    disable iff (arst_i !== ARST_LVL || wb_rst_i)
+    disable iff (arst_i == ARST_LVL || wb_rst_i)
     !$isunknown(wb_clk_i);
 endproperty
 wb_clk_valid_continuous_assert: assert property (wb_clk_valid_continuous);
@@ -218,7 +218,7 @@ wb_clk_valid_continuous_assert: assert property (wb_clk_valid_continuous);
 // Activity checks
 property wb_clk_activity;
     @(posedge wb_clk_i)
-    disable iff (arst_i != ARST_LVL || wb_rst_i)
+    disable iff (arst_i == ARST_LVL || wb_rst_i)
     ##[1:1000] $changed(wb_clk_i);
 endproperty
 wb_clk_activity_assert: assert property (wb_clk_activity);
@@ -280,13 +280,13 @@ wb_dat_o_connectivity_1_assert: assert property (wb_dat_o_connectivity_1);
 assert property (@(posedge wb_clk_i) ($bits(wb_inta_o) == 1));
 
 property inta_functional_registered;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   wb_inta_o == $past(ctr[1] && sr[4], 1);
 endproperty
 inta_functional_registered_assert: assert property (inta_functional_registered);
 
 property inta_direct_functional;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   wb_inta_o == (ctr[1] && sr[4]);
 endproperty
 inta_direct_functional_assert: assert property (inta_direct_functional);
@@ -475,14 +475,14 @@ AsyncResetValue_assert: assert property (AsyncResetValue);
 
 // Control register write connectivity checks
 property p_ctr_write_connectivity;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 2'h02)) 
   |=> (ctr == (wb_dat_i & 8'hC0));
 endproperty
 p_ctr_write_connectivity_assert: assert property (p_ctr_write_connectivity);
 
 property p_ctr_write_connectivity_ack;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 2'h02)) 
   ##1 (wb_ack_o)
   |=> (ctr == (wb_dat_i & 8'hC0));
@@ -490,7 +490,7 @@ endproperty
 p_ctr_write_connectivity_ack_assert: assert property (p_ctr_write_connectivity_ack);
 
 property p_ctr_reserved_write;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 2'h02))
   |-> (wb_dat_i[5:0] == 6'h0);
 endproperty
@@ -498,19 +498,19 @@ p_ctr_reserved_write_assert: assert property (p_ctr_reserved_write);
 
 // EN/IEN control checks
 property p_en_clear_safety;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   ($fell(ctr[7]) && sr[3]) |-> ##[1:3] !sr[3];
 endproperty
 p_en_clear_safety_assert: assert property (p_en_clear_safety);
 
 property p_en_safety;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   $fell(ctr[7]) |-> !sr[3];
 endproperty
 p_en_safety_assert: assert property (p_en_safety);
 
 property p_ien_interrupt;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (ctr[6] && sr[0]) |-> wb_inta_o;
 endproperty
 p_ien_interrupt_assert: assert property (p_ien_interrupt);
@@ -528,7 +528,7 @@ p_ctr_reset_async_assert: assert property (p_ctr_reset_async);
 
 // General write check
 property p_ctr_write;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i != ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 2'h02)) |=> (ctr == (wb_dat_i & 8'hC0));
 endproperty
 p_ctr_write_assert: assert property (p_ctr_write);
@@ -576,14 +576,14 @@ prer_reset_assert: assert property (prer_reset);
 
 // Alternative connectivity checks
 property prer_lo_connectivity_alt;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b00) && !ctr[7])
   |=> (prer[7:0] == $past(wb_dat_i,1));
 endproperty
 prer_lo_connectivity_alt_assert: assert property (prer_lo_connectivity_alt);
 
 property prer_hi_connectivity_alt;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b01) && !ctr[7])
   |=> (prer[15:8] == $past(wb_dat_i,1));
 endproperty
@@ -609,7 +609,7 @@ p_rxr_write_protect_assert: assert property (p_rxr_write_protect);
 
 property p_rxr_write_protect_1;
   @(posedge wb_clk_i) 
-  disable iff (wb_rst_i || arst_i != !ARST_LVL)
+  disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) 
   |=> 
   (rxr == $past(rxr));
@@ -623,14 +623,14 @@ endproperty
 p_rxr_write_protect_2_assert: assert property (p_rxr_write_protect_2);
 
 property p_rxr_write_protect_3;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i != !ARST_LVL)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == !ARST_LVL)
   (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) |=> (rxr == $past(rxr));
 endproperty
 p_rxr_write_protect_3_assert: assert property (p_rxr_write_protect_3);
 
 // Reset assertions
 property p_rxr_reset;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL)
   (arst_i == ARST_LVL || wb_rst_i) |=> (rxr == 8'h00);
 endproperty
 p_rxr_reset_assert: assert property (p_rxr_reset);
@@ -663,7 +663,7 @@ endproperty
 p_rxr_read_update_assert: assert property (p_rxr_read_update);
 
 property p_rxr_update_after_read_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i != !ARST_LVL)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   $rose(sr[0]) && !sr[3] |=> !$stable(rxr);
 endproperty
 p_rxr_update_after_read_1_assert: assert property (p_rxr_update_after_read_1);
@@ -723,28 +723,28 @@ endproperty
 iflag_comprehensive_1_assert: assert property (iflag_comprehensive_1);
 
 property sr_connectivity_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_cyc_i && wb_stb_i && !wb_we_i && (wb_adr_i == 3'h4)) 
   ##1 wb_ack_o |-> wb_dat_o == sr;
 endproperty
 sr_connectivity_1_assert: assert property (sr_connectivity_1);
 
 property tip_lifecycle_2;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (cr[3] || cr[2]) |=> sr[1] throughout (cr[3] || cr[2])[->1] 
   ##0 $fell(sr[1]);
 endproperty
 tip_lifecycle_2_assert: assert property (tip_lifecycle_2);
 
 property iflag_comprehensive;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   ($fell(sr[1]) or $rose(sr[5])) |-> sr[0] 
   until (wb_we_i && (wb_adr_i == 3'h4) && cr[0]);
 endproperty
 iflag_comprehensive_assert: assert property (iflag_comprehensive);
 
 property rxack_phase_aligned;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (sr[1] && cr[3]) |-> 
   ##8 (scl_pad_i && !sr[1]) |-> $past(sda_pad_i,1) == !sr[7];
 endproperty
@@ -801,7 +801,7 @@ endproperty
 rxack_nack_assert: assert property (rxack_nack);
 
 property rxack_phase_aligned_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (sr[1] && cr[3]) |-> $past(sda_pad_i,1) == !sr[7];
 endproperty
 rxack_phase_aligned_assert_1: assert property (rxack_phase_aligned_1);
@@ -852,19 +852,19 @@ endproperty
 TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
 
 property TXR_Connectivity;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03)) |=> (txr == $past(wb_dat_i));
 endproperty
 TXR_Connectivity_assert: assert property (TXR_Connectivity);
 
 property TXR_ValidRWBit_v3;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   $rose(cr[2]) |-> (txr[0] inside {0,1});
 endproperty
 TXR_ValidRWBit_v3_assert: assert property (TXR_ValidRWBit_v3);
 
 property TXR_StabilityDuringTransfer;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (sr[3] && $past(sr[3])) |-> ($stable(txr));
 endproperty
 TXR_StabilityDuringTransfer_assert: assert property (TXR_StabilityDuringTransfer);
@@ -923,37 +923,37 @@ ack_causality_assert: assert property (ack_causality);
 // wb_adr_i
 
 property valid_address_range;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_stb_i && wb_cyc_i) |-> (wb_adr_i inside {0,1,2,3,4});
 endproperty
 valid_address_range_assert: assert property (valid_address_range);
 
 property address_stability;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_stb_i && wb_cyc_i) |-> $stable(wb_adr_i) until wb_ack_o;
 endproperty
 address_stability_assert: assert property (address_stability);
 
 property valid_address_range_1;
-  @(posedge wb_clk_i) disable iff (arst_i || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_stb_i && wb_cyc_i) |-> (wb_adr_i inside {[0:4]});
 endproperty
 valid_address_range_1_assert: assert property (valid_address_range_1);
 
 property address_stability_2;
-  @(posedge wb_clk_i) disable iff (arst_i || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL|| wb_rst_i)
   (wb_stb_i && wb_cyc_i) |-> ##[0:1] $stable(wb_adr_i) throughout (wb_cyc_i[->1] ##0 wb_ack_o);
 endproperty
 address_stability_2_assert: assert property (address_stability_2);
 
 property address_stability_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_stb_i && wb_cyc_i && !wb_ack_o) |=> $stable(wb_adr_i);
 endproperty
 address_stability_1_assert: assert property (address_stability_1);
 
 property unused_address_bits;
-    @(posedge wb_clk_i) disable iff (arst_i || wb_rst_i)
+    @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL|| wb_rst_i)
     (wb_stb_i && wb_cyc_i) |-> (wb_adr_i[2:0] <= 3'h5);
 endproperty
 unused_address_bits_assert: assert property (unused_address_bits);
@@ -969,7 +969,7 @@ wb_clk_toggle_stability_assert: assert property (wb_clk_toggle_stability);
 
 property wb_clk_toggle_counter;
     int count;
-    disable iff (arst_i !== ARST_LVL || wb_rst_i)
+    disable iff (arst_i == ARST_LVL || wb_rst_i)
     (1, count = 0) |=> (wb_clk_i != $past(wb_clk_i), count = 0)
     or
     (1, count++) |=> (count < 100);
@@ -985,7 +985,7 @@ wb_clk_toggle_window_assert: assert property (wb_clk_toggle_window);
 
 property wb_clk_toggle_period;
     @(posedge wb_clk_i) 
-    disable iff (arst_i != ARST_LVL || wb_rst_i)
+    disable iff (arst_i == ARST_LVL || wb_rst_i)
     (wb_clk_i |-> ##[1:MAX_PERIOD] !wb_clk_i) and
     (!wb_clk_i |-> ##[1:MAX_PERIOD] wb_clk_i);
 endproperty
@@ -1060,21 +1060,21 @@ we_stability_assert: assert property (we_stability);
 // wb_dat_i
 
 property wb_dat_stable_until_ack;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_we_i && wb_stb_i && wb_cyc_i) |-> 
     $stable(wb_dat_i) throughout (1'b1 [*1:$] ##0 wb_ack_o);
 endproperty
 wb_dat_stable_until_ack_assert: assert property (wb_dat_stable_until_ack);
 
 property ctrl_reg_reserved_bits;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_adr_i == 3'h2 && wb_we_i && wb_stb_i && wb_cyc_i) |->
     (wb_dat_i & 8'hFC) == 0;
 endproperty
 ctrl_reg_reserved_bits_assert: assert property (ctrl_reg_reserved_bits);
 
 property cmd_reg_reserved_bits;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_adr_i == 3'h4 && wb_we_i && wb_stb_i && wb_cyc_i) |->
     (wb_dat_i & 8'hE8) == 0;
 endproperty
@@ -1125,7 +1125,7 @@ p_cmd_reg_reserved_assert: assert property (p_cmd_reg_reserved);
 
 property reset_values;
   @(posedge wb_clk_i)
-  (arst_i == !ARST_LVL || wb_rst_i) |=> 
+  (arst_i == ARST_LVL || wb_rst_i) |=> 
   (wb_dat_o == 8'hFF && wb_adr_i == 2'h00 ||  // PRERlo reset
    wb_dat_o == 8'hFF && wb_adr_i == 2'h01 ||  // PRERhi reset
    wb_dat_o == 8'h00);                        // Other registers
@@ -1177,7 +1177,7 @@ SR_read_assert: assert property (SR_read);
 
 property reset_values_1;
   @(posedge wb_clk_i)
-  (arst_i == !ARST_LVL || wb_rst_i) |=> 
+  (arst_i == ARST_LVL || wb_rst_i) |=> 
   ((wb_adr_i == 2'h00 && wb_dat_o == 8'hFF) ||  // PRERlo reset
    (wb_adr_i == 2'h01 && wb_dat_o == 8'hFF) ||  // PRERhi reset
    (wb_dat_o == 8'h00));                        // Other registers
@@ -1244,12 +1244,12 @@ PRERlo_read_2_assert: assert property (PRERlo_read_2);
 
 property inta_reset_stable;
   @(posedge wb_clk_i)
-  (arst_i != ARST_LVL || wb_rst_i) |-> !wb_inta_o throughout (##[0:$] (arst_i == ARST_LVL && !wb_rst_i));
+  (arst_i == ARST_LVL || wb_rst_i) |-> !wb_inta_o throughout (##[0:$] (arst_i == ARST_LVL && !wb_rst_i));
 endproperty
 inta_reset_stable_assert: assert property (inta_reset_stable);
 
 property inta_iack_clear_fixed;
-  @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_we_i && wb_stb_i && wb_cyc_i && 
    (wb_adr_i[2:0] == 3'h4) &&    // Command Register
    wb_dat_i[7] &&                 // IACK bit
@@ -1422,7 +1422,7 @@ endproperty
 wb_input_stability_assert: assert property (wb_input_stability);
 
 property wb_stb_retention;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i ^ ARST_LVL))
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (wb_stb_i && wb_cyc_i) |-> wb_stb_i throughout ##2 wb_ack_o;
 endproperty
 wb_stb_retention_assert: assert property (wb_stb_retention);
@@ -1439,7 +1439,7 @@ endproperty
 wb_we_stable_p_assert: assert property (wb_we_stable_p);
 
 property wb_we_stability_p;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_cyc_i && wb_stb_i) |-> $stable(wb_we_i) throughout (wb_cyc_i && wb_stb_i) until wb_ack_o;
 endproperty
 wb_we_stability_p_assert: assert property (wb_we_stability_p);
@@ -1451,7 +1451,7 @@ endproperty
 wb_we_stable_p_v2_assert: assert property (wb_we_stable_p_v2);
 
 property wb_we_stable_p_v3;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_cyc_i && wb_stb_i) |-> $stable(wb_we_i) throughout (wb_cyc_i && wb_stb_i)[->1] ##0 wb_ack_o;
 endproperty
 wb_we_stable_p_v3_assert: assert property (wb_we_stable_p_v3);
@@ -1464,7 +1464,7 @@ endproperty
 wb_write_ack_p_assert: assert property (wb_write_ack_p);
 
 property wb_write_ack_p_v2;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   (wb_cyc_i && wb_stb_i && wb_we_i) |=> ##1 wb_ack_o;
 endproperty
 wb_write_ack_p_v2_assert: assert property (wb_write_ack_p_v2);
@@ -1482,6 +1482,4 @@ property wb_reset_write_ack_p;
 endproperty
 wb_reset_write_ack_p_assert: assert property (wb_reset_write_ack_p);
 
-
 endmodule
-
