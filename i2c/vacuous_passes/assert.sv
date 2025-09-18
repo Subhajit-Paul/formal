@@ -167,14 +167,6 @@ property AsyncResetValue;
 endproperty
 AsyncResetValue_assert: assert property (AsyncResetValue);
 
-
-property p_ctr_reserved_write;
-  @(posedge wb_clk_i)
-  (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 2'h02))
-  |-> (wb_dat_i[5:0] == 6'h0);
-endproperty
-p_ctr_reserved_write_assert: assume property (p_ctr_reserved_write);
-
 // EN/IEN control checks
 property p_en_clear_safety;
   @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
@@ -214,18 +206,6 @@ property p_rxr_reset_2;
   (wb_rst_i) |=> (rxr == 8'h00);
 endproperty
 p_rxr_reset_2_assert: assert property (p_rxr_reset_2);
-
-
-property scl_high_during_start;
-  @(posedge wb_clk_i) $fell(sda_pad_i) |-> scl_pad_i;
-endproperty
-scl_high_during_start_assert: assume property (scl_high_during_start);
-
-property scl_high_during_stop;
-  @(posedge wb_clk_i) $rose(sda_pad_i) |-> scl_pad_i;
-endproperty
-scl_high_during_stop_assert: assume property (scl_high_during_stop);
-
 
 // sda_pad_i
 
@@ -296,21 +276,6 @@ property ack_reset_behavior;
   (arst_i == ARST_LVL || wb_rst_i) |-> ##[0:$] !wb_ack_o;
 endproperty
 ack_reset_behavior_assert: assert property (ack_reset_behavior);
-
-property p_ctrl_reg_reserved;
-  @(posedge wb_clk_i)
-  (wb_adr_i == 3'h2 && wb_cyc_i && wb_stb_i && wb_we_i) |-> 
-  (wb_dat_i & CTRL_RESV_MASK) == 8'h0;
-endproperty
-p_ctrl_reg_reserved_assert: assume property (p_ctrl_reg_reserved);
-
-property p_cmd_reg_reserved;
-  @(posedge wb_clk_i)
-  (wb_adr_i == 3'h4 && wb_cyc_i && wb_stb_i && wb_we_i) |-> 
-  (wb_dat_i & CMD_RESV_MASK) == 8'h0;
-endproperty
-p_cmd_reg_reserved_assert: assume property (p_cmd_reg_reserved);
-
 
 // wb_dat_o
 
