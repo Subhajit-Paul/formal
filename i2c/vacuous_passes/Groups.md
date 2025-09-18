@@ -74,31 +74,6 @@
 * **`ack_reset` / `ack_reset_behavior`**
   Acknowledge output (`wb_ack_o`) must be low immediately and stay low during resets.
 
----
-
-### **Register Reserved Bits Checks**
-
-* **`p_ctr_reserved_write`**
-  Reserved bits in control register (`ctr[5:0]`) must always be written as `0`.
-
-* **`p_ctrl_reg_reserved`**
-  Writes to control register cannot set reserved bits (`CTRL_RESV_MASK`).
-
-* **`p_cmd_reg_reserved`**
-  Writes to command register cannot set reserved bits (`CMD_RESV_MASK`).
-
----
-
-### **Command Register Auto-Clear Bits**
-
-* **`STA_AutoClear`**
-  Start bit (`cr[7]`) clears automatically after being issued.
-
-* **`STO_AutoClear`**
-  Stop bit (`cr[6]`) clears automatically after being issued.
-
-* **`RD_AutoClear`**
-  Read command (`cr[5]`) clears automatically after being issued.
 
 ---
 
@@ -192,12 +167,6 @@
 
 * **`inta_functionality_delayed`**
   Same as `inta_functionality`, but allows a one-cycle delay before `wb_inta_o` asserts.
-
-* **`inta_iack_clear_fixed`**
-  Writing to the command register with `IACK` bit set (and reserved bits cleared) must clear the interrupt flag (`sr[4]`) while keeping interrupt-enable (`ctr[1]`) intact.
-
-* **`inta_iack_clear_timed`**
-  Acknowledge write (`IACK=1`) must clear both `wb_inta_o` and `sr[4]` on the next acknowledged cycle.
 
 * **`inta_arbitration_loss`**
   If arbitration-lost (`sr[2]`) rises while interrupts are enabled, the interrupt output (`wb_inta_o`) must assert within 1–2 cycles.

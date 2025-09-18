@@ -44,11 +44,6 @@ property p_rxr_valid_after_read;
 endproperty
 p_rxr_valid_after_read_assert: assert property (p_rxr_valid_after_read);
 
-
-assert property (@(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL) $bits(wb_we_i) == 1);
-
-assert property (@(posedge wb_clk_i) disable iff (wb_rst_i) $bits(wb_we_i) == 1);
-
 // arst_i
 
 assert property (@(posedge wb_clk_i) $fell(arst_i) |=> (sr == 8'h00));
@@ -138,27 +133,6 @@ property CR_ResetValue_Sync;
   @(posedge wb_clk_i) wb_rst_i |=> (cr == 8'h00);
 endproperty
 CR_ResetValue_Sync_assert: assert property (CR_ResetValue_Sync);
-
-
-property STA_AutoClear;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (wb_adr_i == 4'h4 && wb_we_i && wb_cyc_i && wb_stb_i && wb_dat_i[7]) |=> (cr[7] == 0);
-endproperty
-STA_AutoClear_assert: assert property (STA_AutoClear);
-
-
-property STO_AutoClear;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (wb_adr_i == 4'h4 && wb_we_i && wb_cyc_i && wb_stb_i && wb_dat_i[6]) |=> (cr[6] == 0);
-endproperty
-STO_AutoClear_assert: assert property (STO_AutoClear);
-
-
-property RD_AutoClear;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (wb_adr_i == 4'h4 && wb_we_i && wb_cyc_i && wb_stb_i && wb_dat_i[5]) |=> (cr[5] == 0);
-endproperty
-RD_AutoClear_assert: assert property (RD_AutoClear);
 
 
 property AsyncResetValue;
@@ -305,18 +279,6 @@ property inta_reset_stable;
 endproperty
 inta_reset_stable_assert: assert property (inta_reset_stable);
 
-
-property inta_iack_clear_fixed;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_we_i && wb_stb_i && wb_cyc_i && 
-   (wb_adr_i[2:0] == 3'h4) &&    // Command Register
-   wb_dat_i[7] &&                 // IACK bit
-   wb_dat_i[6:5] == 2'b0)         // Reserved bits
-  |=> (ctr[1] && !sr[4]);         // IF cleared
-endproperty
-inta_iack_clear_fixed_assert: assert property (inta_iack_clear_fixed);
-
-
 property inta_reset_sync;
   @(posedge wb_clk_i) wb_rst_i |-> !wb_inta_o;
 endproperty
@@ -356,15 +318,6 @@ property inta_functionality_delayed;
   (ctr[1] && sr[4]) |=> wb_inta_o;
 endproperty
 inta_functionality_delayed_assert: assert property (inta_functionality_delayed);
-
-
-property inta_iack_clear_timed;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_we_i && wb_stb_i && wb_cyc_i && (wb_adr_i == 3'h4) && wb_dat_i[7])
-  ##1 wb_ack_o |=> !wb_inta_o && !sr[4];
-endproperty
-inta_iack_clear_timed_assert: assert property (inta_iack_clear_timed);
-
 
 property inta_arbitration_loss;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
