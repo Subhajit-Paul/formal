@@ -35,6 +35,32 @@ module i2c_assertions (
         parameter MAX_PERIOD = 32;
 
 // arst_i
+// This assertion was initially passing vacuously due to sr[3] was checked in the pre condition. However, the specifican and the RTL says sr[3] is a reserved bit and its valuse will be ZERO. So changed sr[3] -> sr[1]. Though it failed, but vacuity is gone.
+property TXR_NoWriteDuringTIP;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  sr[1] |-> !(wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03));
+endproperty
+TXR_NoWriteDuringTIP_assert: assert property (TXR_NoWriteDuringTIP);
+// This assertion was initially passing vacuously due to sr[3] was checked in the pre condition. However, the specifican and the RTL says sr[3] is a reserved bit and its valuse will be ZERO. So changed sr[3] -> sr[1]. Though it failed, but vacuity is gone.
+property TXR_Stability;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (sr[1] && $past(sr[1])) |-> $stable(txr);
+endproperty
+TXR_Stability_assert: assert property (TXR_Stability);
+
+// This assertion was initially passing vacuously due to sr[3] was checked in the pre condition. However, the specifican and the RTL says sr[3] is a reserved bit and its valuse will be ZERO. So changed sr[3] -> sr[1]. Though it failed, but vacuity is gone.
+property TXR_Stability_v2;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  sr[1] |-> $stable(txr);
+endproperty
+TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
+
+// This assertion was initially passing vacuously due to sr[3] was checked in the pre condition. However, the specifican and the RTL says sr[3] is a reserved bit and its valuse will be ZERO. So changed sr[3] -> sr[1]. Though it failed, but vacuity is gone.
+property TXR_StabilityDuringTransfer;
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
+  (sr[1] && $past(sr[1])) |-> ($stable(txr));
+endproperty
+TXR_StabilityDuringTransfer_assert: assert property (TXR_StabilityDuringTransfer);
 
 property arst_ctr_en;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (ctr[7] == 1'b0);

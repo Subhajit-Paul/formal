@@ -33,7 +33,15 @@ module i2c_assertions (
        // parameters
         parameter ARST_LVL = 1'b0; // asynchronous reset level
 
-
+// This assertion has been converted to non vacuous by changing value from $fell(sr[3]) -> $fell(sr[1])
+property p_rxr_valid_after_read;
+  @(posedge wb_clk_i) 
+  disable iff (arst_i == ARST_LVL || wb_rst_i)
+  ($fell(sr[1]) && $rose(sr[0])) // Transfer completion
+  |->
+  !$isunknown(rxr);
+endproperty
+p_rxr_valid_after_read_assert: assert property (p_rxr_valid_after_read);
 
 // arst_i
 

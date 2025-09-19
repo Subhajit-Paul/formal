@@ -7,7 +7,7 @@ analyze -v2k -f ${MAIN_PATH}/i2c.f
 
 # Analyze SystemVerilog top module
 analyze -sv12 ${MAIN_PATH}/rtl/i2c_master_top.sv
-analyze -sv12 ${MAIN_PATH}/reset_antecedents/assert.sv
+analyze -sv12 ${MAIN_PATH}/wo_reset_vacuous/assert.sv
 
 # Initialize coverage
 # check_cov -init -model all
@@ -18,9 +18,6 @@ elaborate -top i2c_master_top
 # Set clock and reset
 clock wb_clk_i
 reset -none
-# reset wb_rst_i
-# reset ~arst_i
-# reset -expr {wb_rst_i ~arst_i}
 
 # Run formal verification
 prove -all

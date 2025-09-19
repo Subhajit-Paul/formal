@@ -34,16 +34,6 @@ parameter CTRL_RESV_MASK = 8'hFC;
 parameter CMD_RESV_MASK = 8'hE8;
 parameter ARST_LVL = 1'b0; // asynchronous reset level
 parameter MAX_PERIOD = 32;
-
-property p_rxr_valid_after_read;
-  @(posedge wb_clk_i) 
-  disable iff (arst_i == ARST_LVL || wb_rst_i)
-  ($fell(sr[3]) && $rose(sr[0])) // Transfer completion
-  |->
-  !$isunknown(rxr);
-endproperty
-p_rxr_valid_after_read_assert: assert property (p_rxr_valid_after_read);
-
 // arst_i
 
 assert property (@(posedge wb_clk_i) $fell(arst_i) |=> (sr == 8'h00));
@@ -141,13 +131,6 @@ property AsyncResetValue;
 endproperty
 AsyncResetValue_assert: assert property (AsyncResetValue);
 
-// EN/IEN control checks
-property p_en_clear_safety;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
-  ($fell(ctr[7]) && sr[3]) |-> ##[1:3] !sr[3];
-endproperty
-p_en_clear_safety_assert: assert property (p_en_clear_safety);
-
 
 property p_ctr_reset_sync;
   @(posedge wb_clk_i) $rose(wb_rst_i) |=> (ctr == 8'h00);
@@ -183,59 +166,16 @@ p_rxr_reset_2_assert: assert property (p_rxr_reset_2);
 
 // sda_pad_i
 
-// Protocol condition assertions
-property start_condition;
-  @(posedge wb_clk_i) disable iff (wb_rst_i)
-  (cr[3] && scl_pad_o) |-> $fell(sda_pad_i);
-endproperty
-start_condition_assert: assert property (start_condition);
-
-
-property stop_condition;
-  @(posedge wb_clk_i) disable iff (wb_rst_i)
-  (cr[2] && scl_pad_o) |-> $rose(sda_pad_i);
-endproperty
-stop_condition_assert: assert property (stop_condition);
-
-
 property TXR_ResetValue;
   @(posedge wb_clk_i) (arst_i == ARST_LVL || wb_rst_i) |=> (txr == 8'h00);
 endproperty
 TXR_ResetValue_assert: assert property (TXR_ResetValue);
-
-
-property TXR_NoWriteDuringTIP;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> !(wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03));
-endproperty
-TXR_NoWriteDuringTIP_assert: assert property (TXR_NoWriteDuringTIP);
-
-
-property TXR_Stability;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (sr[3] && $past(sr[3])) |-> $stable(txr);
-endproperty
-TXR_Stability_assert: assert property (TXR_Stability);
-
 
 property TXR_ResetValue_v2;
   @(posedge wb_clk_i) (arst_i == ARST_LVL || wb_rst_i) |-> (txr == 8'h00);
 endproperty
 TXR_ResetValue_v2_assert: assert property (TXR_ResetValue_v2);
 
-
-property TXR_Stability_v2;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> $stable(txr);
-endproperty
-TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
-
-
-property TXR_StabilityDuringTransfer;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (sr[3] && $past(sr[3])) |-> ($stable(txr));
-endproperty
-TXR_StabilityDuringTransfer_assert: assert property (TXR_StabilityDuringTransfer);
 
 
 property ack_reset;
@@ -284,47 +224,11 @@ property inta_reset_sync;
 endproperty
 inta_reset_sync_assert: assert property (inta_reset_sync);
 
-
-property inta_functionality;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |-> wb_inta_o;
-endproperty
-inta_functionality_assert: assert property (inta_functionality);
-
-
-property inta_persistence;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |-> wb_inta_o throughout (ctr[1] && sr[4])[->1];
-endproperty
-inta_persistence_assert: assert property (inta_persistence);
-
-
-property arbitration_loss_interrupt;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[2] |-> sr[4];
-endproperty
-arbitration_loss_interrupt_assert: assert property (arbitration_loss_interrupt);
-
-
 property inta_reset_connectivity;
   @(posedge wb_clk_i) 
   (arst_i == ARST_LVL || wb_rst_i) |-> !wb_inta_o;
 endproperty
 inta_reset_connectivity_assert: assert property (inta_reset_connectivity);
-
-
-property inta_functionality_delayed;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |=> wb_inta_o;
-endproperty
-inta_functionality_delayed_assert: assert property (inta_functionality_delayed);
-
-property inta_arbitration_loss;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  $rose(sr[2]) && ctr[1] |=> ##[1:2] wb_inta_o;
-endproperty
-inta_arbitration_loss_assert: assert property (inta_arbitration_loss);
-
 
 property inta_reset_combined;
   @(posedge wb_clk_i or posedge arst_i)
