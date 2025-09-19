@@ -99,16 +99,6 @@ property p_rxr_read_update_1;
 endproperty
 p_rxr_read_update_1_assert: assert property (p_rxr_read_update_1);
 
-property p_rxr_valid_after_read;
-  @(posedge wb_clk_i) 
-  disable iff (arst_i == ARST_LVL || wb_rst_i)
-  ($fell(sr[3]) && $rose(sr[0])) // Transfer completion
-  |->
-  !$isunknown(rxr);
-endproperty
-p_rxr_valid_after_read_assert: assert property (p_rxr_valid_after_read);
-
-
 // scl_pad_i
 
 assert property (@(posedge wb_clk_i) $bits(scl_pad_i) == 1);

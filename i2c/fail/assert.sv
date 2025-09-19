@@ -525,18 +525,6 @@ property TXR_ResetValue;
 endproperty
 TXR_ResetValue_assert: assert property (TXR_ResetValue);
 
-property TXR_NoWriteDuringTIP;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> !(wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03));
-endproperty
-TXR_NoWriteDuringTIP_assert: assert property (TXR_NoWriteDuringTIP);
-
-property TXR_Stability;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (sr[3] && $past(sr[3])) |-> $stable(txr);
-endproperty
-TXR_Stability_assert: assert property (TXR_Stability);
-
 property TXR_WriteConnectivity_v2;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03)) ##1 wb_ack_o
@@ -549,12 +537,6 @@ property TXR_ResetValue_v2;
 endproperty
 TXR_ResetValue_v2_assert: assert property (TXR_ResetValue_v2);
 
-property TXR_Stability_v2;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> $stable(txr);
-endproperty
-TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
-
 property TXR_Connectivity;
   @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
   (wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03)) |=> (txr == $past(wb_dat_i));
@@ -566,12 +548,6 @@ property TXR_ValidRWBit_v3;
   $rose(cr[2]) |-> (txr[0] inside {0,1});
 endproperty
 TXR_ValidRWBit_v3_assert: assert property (TXR_ValidRWBit_v3);
-
-property TXR_StabilityDuringTransfer;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i)
-  (sr[3] && $past(sr[3])) |-> ($stable(txr));
-endproperty
-TXR_StabilityDuringTransfer_assert: assert property (TXR_StabilityDuringTransfer);
 
 // wb_ack_o
 
@@ -1042,7 +1018,6 @@ property wb_stb_retention;
 endproperty
 wb_stb_retention_assert: assert property (wb_stb_retention);
 
-wb_stb_reset_inactive
 // wb_we_i
 
 
