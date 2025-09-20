@@ -35,20 +35,12 @@ parameter CMD_RESV_MASK = 8'hE8;
 parameter ARST_LVL = 1'b0; // asynchronous reset level
 parameter MAX_PERIOD = 32;
 
-
-
 // Protocol condition assertions
 property start_condition;
   @(posedge wb_clk_i)  disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (cr[3] && scl_pad_o) |-> $fell(sda_pad_i);
 endproperty
 start_condition_assert: assert property (start_condition);
-
-property TXR_Stability_v2;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> $stable(txr);
-endproperty
-TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
 
 property stop_condition;
   @(posedge wb_clk_i)  disable iff (wb_rst_i || (arst_i == ARST_LVL))
@@ -69,20 +61,17 @@ property inta_functionality;
 endproperty
 inta_functionality_assert: assert property (inta_functionality);
 
-
 property inta_persistence;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (ctr[1] && sr[4]) |-> wb_inta_o throughout (ctr[1] && sr[4])[->1];
 endproperty
 inta_persistence_assert: assert property (inta_persistence);
 
-
 property arbitration_loss_interrupt;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   sr[2] |-> sr[4];
 endproperty
 arbitration_loss_interrupt_assert: assert property (arbitration_loss_interrupt);
-
 
 property inta_functionality_delayed;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)

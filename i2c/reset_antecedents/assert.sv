@@ -196,7 +196,7 @@ ack_reset_behavior_assert: assert property (ack_reset_behavior);
 
 property reset_values;
   @(posedge wb_clk_i)
-  (arst_i == !ARST_LVL || wb_rst_i) |=> 
+  (arst_i == ARST_LVL || wb_rst_i) |=> 
   (wb_dat_o == 8'hFF && wb_adr_i == 2'h00 ||  // PRERlo reset
    wb_dat_o == 8'hFF && wb_adr_i == 2'h01 ||  // PRERhi reset
    wb_dat_o == 8'h00);                        // Other registers
@@ -205,7 +205,7 @@ reset_values_assert: assert property (reset_values);
 
 property reset_values_1;
   @(posedge wb_clk_i)
-  (arst_i == !ARST_LVL || wb_rst_i) |=> 
+  (arst_i == ARST_LVL || wb_rst_i) |=> 
   ((wb_adr_i == 2'h00 && wb_dat_o == 8'hFF) ||  // PRERlo reset
    (wb_adr_i == 2'h01 && wb_dat_o == 8'hFF) ||  // PRERhi reset
    (wb_dat_o == 8'h00));                        // Other registers
@@ -317,7 +317,6 @@ property wb_stb_reset_inactive;
   @(posedge wb_clk_i) (wb_rst_i || (arst_i ^ ARST_LVL)) |-> !wb_stb_i;
 endproperty
 wb_stb_reset_inactive_assert: assert property (wb_stb_reset_inactive);
-
 
 // Reset behavior with wb_we_i
 property wb_reset_block_p;
