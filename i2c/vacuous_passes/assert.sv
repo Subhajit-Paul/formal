@@ -72,37 +72,31 @@ property arst_status_bits;
 endproperty
 arst_status_bits_assert: assert property (arst_status_bits);
 
-
 property arst_inta;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (wb_inta_o == 1'b0);
 endproperty
 arst_inta_assert: assert property (arst_inta);
-
 
 property arst_ctr_reset;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (ctr == 8'h00);
 endproperty
 arst_ctr_reset_assert: assert property (arst_ctr_reset);
 
-
 property arst_cr_reset;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (cr == 8'h00);
 endproperty
 arst_cr_reset_assert: assert property (arst_cr_reset);
-
 
 property arst_status_reset;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (sr == 8'h00);
 endproperty
 arst_status_reset_assert: assert property (arst_status_reset);
 
-
 property arst_scl_sda_default;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> 
     (scl_pad_o == 1'b1 && sda_pad_o == 1'b1);
 endproperty
 arst_scl_sda_default_assert: assert property (arst_scl_sda_default);
-
 
 property arst_ctr_reset_1;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> 
@@ -112,18 +106,15 @@ property arst_ctr_reset_1;
 endproperty
 arst_ctr_reset_1_assert: assert property (arst_ctr_reset_1);
 
-
 property CR_ResetValue_Async;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (cr == 8'h00);
 endproperty
 CR_ResetValue_Async_assert: assert property (CR_ResetValue_Async);
 
-
 property CR_ResetValue_Sync;
   @(posedge wb_clk_i) wb_rst_i |=> (cr == 8'h00);
 endproperty
 CR_ResetValue_Sync_assert: assert property (CR_ResetValue_Sync);
-
 
 property AsyncResetValue;
   @(posedge wb_clk_i) 
@@ -131,18 +122,15 @@ property AsyncResetValue;
 endproperty
 AsyncResetValue_assert: assert property (AsyncResetValue);
 
-
 property p_ctr_reset_sync;
   @(posedge wb_clk_i) $rose(wb_rst_i) |=> (ctr == 8'h00);
 endproperty
 p_ctr_reset_sync_assert: assert property (p_ctr_reset_sync);
 
-
 property p_ctr_reset_async;
   @(posedge wb_clk_i) $changed(arst_i) && (arst_i == ARST_LVL) |=> (ctr == 8'h00);
 endproperty
 p_ctr_reset_async_assert: assert property (p_ctr_reset_async);
-
 
 property prer_reset;
   @(posedge wb_clk_i)
@@ -150,13 +138,11 @@ property prer_reset;
 endproperty
 prer_reset_assert: assert property (prer_reset);
 
-
 property p_rxr_reset;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL)
   (arst_i == ARST_LVL || wb_rst_i) |=> (rxr == 8'h00);
 endproperty
 p_rxr_reset_assert: assert property (p_rxr_reset);
-
 
 property p_rxr_reset_2;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL)
@@ -176,14 +162,11 @@ property TXR_ResetValue_v2;
 endproperty
 TXR_ResetValue_v2_assert: assert property (TXR_ResetValue_v2);
 
-
-
 property ack_reset;
   @(posedge wb_clk_i) 
   (arst_i == ARST_LVL || wb_rst_i) |-> !wb_ack_o;
 endproperty
 ack_reset_assert: assert property (ack_reset);
-
 
 property ack_reset_behavior;
   @(posedge wb_clk_i) 
@@ -192,7 +175,6 @@ endproperty
 ack_reset_behavior_assert: assert property (ack_reset_behavior);
 
 // wb_dat_o
-
 property reset_values;
   @(posedge wb_clk_i)
   (arst_i == ARST_LVL || wb_rst_i) |=> 
@@ -202,7 +184,6 @@ property reset_values;
 endproperty
 reset_values_assert: assert property (reset_values);
 
-
 property reset_values_1;
   @(posedge wb_clk_i) 
   (arst_i == ARST_LVL || wb_rst_i) |=> 
@@ -211,7 +192,6 @@ property reset_values_1;
    (wb_dat_o == 8'h00));                        // Other registers
 endproperty
 reset_values_1_assert: assert property (reset_values_1);
-
 
 property inta_reset_stable;
   @(posedge wb_clk_i)
@@ -236,24 +216,20 @@ property inta_reset_combined;
 endproperty
 inta_reset_combined_assert: assert property (inta_reset_combined);
 
-
 property wb_outputs_reset;
   @(posedge wb_clk_i) wb_rst_i |-> (wb_ack_o == 0 && wb_inta_o == 0);
 endproperty
 wb_outputs_reset_assert: assert property (wb_outputs_reset);
-
 
 property prer_stable_reset;
   @(posedge wb_clk_i) $rose(wb_rst_i) |=> always (prer == 16'hFFFF) until (!wb_rst_i);
 endproperty
 prer_stable_reset_assert: assert property (prer_stable_reset);
 
-
 property arbitration_lost_reset;
   @(posedge wb_clk_i) wb_rst_i |-> !sr[2];
 endproperty
 arbitration_lost_reset_assert: assert property (arbitration_lost_reset);
-
 
 property wb_data_reset;
   @(posedge wb_clk_i) 
@@ -261,54 +237,45 @@ property wb_data_reset;
 endproperty
 wb_data_reset_assert: assert property (wb_data_reset);
 
-
 property scl_data_reset;
   @(posedge wb_clk_i) wb_rst_i |-> scl_pad_o == 1'b0;
 endproperty
 scl_data_reset_assert: assert property (scl_data_reset);
-
 
 property sda_data_reset;
   @(posedge wb_clk_i) wb_rst_i |-> sda_pad_o == 1'b0;
 endproperty
 sda_data_reset_assert: assert property (sda_data_reset);
 
-
 property CTR_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (ctr == 8'h00);
 endproperty
 CTR_Reset_assert: assert property (CTR_Reset);
-
 
 property PRER_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (prer == 16'hFFFF);
 endproperty
 PRER_Reset_assert: assert property (PRER_Reset);
 
-
 property SR_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (sr == 8'h00);
 endproperty
 SR_Reset_assert: assert property (SR_Reset);
-
 
 property CR_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (cr == 8'h00);
 endproperty
 CR_Reset_assert: assert property (CR_Reset);
 
-
 property TXR_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (txr == 8'h00);
 endproperty
 TXR_Reset_assert: assert property (TXR_Reset);
 
-
 property RXR_Reset;
   @(posedge wb_clk_i) wb_rst_i |-> (rxr == 8'h00);
 endproperty
 RXR_Reset_assert: assert property (RXR_Reset);
-
 
 property p_reset_prescale_reg;
   @(posedge wb_clk_i)
@@ -316,20 +283,17 @@ property p_reset_prescale_reg;
 endproperty
 p_reset_prescale_reg_assert: assert property (p_reset_prescale_reg);
 
-
 property p_reset_busy_flag;
   @(posedge wb_clk_i)
   wb_rst_i |=> !sr[5];
 endproperty
 p_reset_busy_flag_assert: assert property (p_reset_busy_flag);
 
-
 property wb_reset_block_p;
   @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   wb_rst_i |-> !(wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o);
 endproperty
 wb_reset_block_p_assert: assert property (wb_reset_block_p);
-
 
 property wb_reset_write_ack_p;
   @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)

@@ -99,13 +99,16 @@ property arst_ctr_reset_1;
 endproperty
 arst_ctr_reset_1_assert: assert property (arst_ctr_reset_1);
 
-
 // Reset values
 property CR_ResetValue_Async;
   @(posedge wb_clk_i) (arst_i == ARST_LVL) |-> (cr == 8'h00);
 endproperty
 CR_ResetValue_Async_assert: assert property (CR_ResetValue_Async);
 
+property CR_ResetValue_Sync;
+  @(posedge wb_clk_i) wb_rst_i |=> (cr == 8'h00);
+endproperty
+CR_ResetValue_Sync_assert: assert property (CR_ResetValue_Sync);
 
 // Asynchronous reset coverage
 property AsyncResetValue;
@@ -132,29 +135,13 @@ property prer_reset;
 endproperty
 prer_reset_assert: assert property (prer_reset);
 
-
-
+// Not in vacuous passes
 // Deep reset check
 property prescale_reset_val;
   @(posedge wb_clk_i) 
   (arst_i == ARST_LVL || $past(wb_rst_i)) |=> (prer == 16'hFFFF);
 endproperty
 prescale_reset_val_assert: assert property (prescale_reset_val);
-
-
-// rxr
-
-property p_rxr_write_protect_1;
-  @(posedge wb_clk_i) 
-  disable iff (wb_rst_i || arst_i != !ARST_LVL)
-  (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) 
-  |=> 
-  (rxr == $past(rxr));
-endproperty
-p_rxr_write_protect_1_assert: assert property (p_rxr_write_protect_1);
-
-
-
 
 // Reset assertions
 property p_rxr_reset;
@@ -163,6 +150,7 @@ property p_rxr_reset;
 endproperty
 p_rxr_reset_assert: assert property (p_rxr_reset);
 
+// Not in vacuous passes
 property p_rxr_reset_1;
   @(posedge wb_clk_i) 
   (arst_i == !ARST_LVL || $past(wb_rst_i)) 
@@ -179,23 +167,16 @@ p_rxr_reset_2_assert: assert property (p_rxr_reset_2);
 
 assert property (@(posedge wb_clk_i) $fell(arst_i) |=> (sr == 8'h00));
 
-
 property TXR_ResetValue;
   @(posedge wb_clk_i) (arst_i == ARST_LVL || wb_rst_i) |=> (txr == 8'h00);
 endproperty
 TXR_ResetValue_assert: assert property (TXR_ResetValue);
-
 
 property TXR_ResetValue_v2;
   @(posedge wb_clk_i) (arst_i == ARST_LVL || wb_rst_i) |-> (txr == 8'h00);
 endproperty
 TXR_ResetValue_v2_assert: assert property (TXR_ResetValue_v2);
 
-property TXR_Stability_v2;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[3] |-> $stable(txr);
-endproperty
-TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
 
 property ack_reset;
   @(posedge wb_clk_i) 
@@ -204,6 +185,12 @@ endproperty
 ack_reset_assert: assert property (ack_reset);
 
 assert property (@(posedge wb_clk_i) wb_rst_i |-> !wb_ack_o);
+
+property ack_reset_behavior;
+  @(posedge wb_clk_i) 
+  (arst_i == ARST_LVL || wb_rst_i) |-> ##[0:$] !wb_ack_o;
+endproperty
+ack_reset_behavior_assert: assert property (ack_reset_behavior);
 
 // Cycle validity assertions
 
@@ -231,12 +218,10 @@ property inta_reset_stable;
 endproperty
 inta_reset_stable_assert: assert property (inta_reset_stable);
 
-
 property inta_reset_sync;
   @(posedge wb_clk_i) wb_rst_i |-> !wb_inta_o;
 endproperty
 inta_reset_sync_assert: assert property (inta_reset_sync);
-
 
 property inta_reset_connectivity;
   @(posedge wb_clk_i) 
@@ -250,9 +235,7 @@ property inta_reset_combined;
 endproperty
 inta_reset_combined_assert: assert property (inta_reset_combined);
 
-
 // wb_rst_i
-
 property wb_outputs_reset;
   @(posedge wb_clk_i) wb_rst_i |-> (wb_ack_o == 0 && wb_inta_o == 0);
 endproperty
@@ -328,9 +311,8 @@ property p_reset_busy_flag;
 endproperty
 p_reset_busy_flag_assert: assert property (p_reset_busy_flag);
 
-
 // wb_stb_i
-
+// Not in vacuous passes
 property wb_stb_reset_inactive;
   @(posedge wb_clk_i) (wb_rst_i || (arst_i ^ ARST_LVL)) |-> !wb_stb_i;
 endproperty

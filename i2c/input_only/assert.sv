@@ -42,6 +42,14 @@ property ReservedBitsZero;
 endproperty
 ReservedBitsZero_assert: assert property (ReservedBitsZero);
 
+property p_rxr_write_protect_1;
+  @(posedge wb_clk_i) 
+  disable iff (wb_rst_i || arst_i == ARST_LVL)
+  (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) 
+  |=> 
+  (rxr == $past(rxr));
+endproperty
+p_rxr_write_protect_1_assert: assert property (p_rxr_write_protect_1);
 
 // Command conflicts
 property NoRD_WR_Conflict;

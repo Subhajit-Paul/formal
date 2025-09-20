@@ -44,6 +44,11 @@ property start_condition;
 endproperty
 start_condition_assert: assert property (start_condition);
 
+property TXR_Stability_v2;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  sr[3] |-> $stable(txr);
+endproperty
+TXR_Stability_v2_assert: assert property (TXR_Stability_v2);
 
 property stop_condition;
   @(posedge wb_clk_i)  disable iff (wb_rst_i || (arst_i == ARST_LVL))
