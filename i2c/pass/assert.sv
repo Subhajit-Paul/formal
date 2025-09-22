@@ -33,6 +33,76 @@ module i2c_assertions (
        // parameters
         parameter ARST_LVL = 1'b0; // asynchronous reset level
 
+// START OF diasable iff introduction passing blocks
+property p_en_safety;
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
+  $fell(ctr[7]) |-> !sr[3];
+endproperty
+p_en_safety_assert: assert property (p_en_safety);
+
+// Connectivity properties
+property prer_lo_connectivity;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b00) && !ctr[7])
+  |=> (prer[7:0] == $past(wb_dat_i,1));
+endproperty
+prer_lo_connectivity_assert: assert property (prer_lo_connectivity);
+
+property prer_hi_connectivity;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b01) && !ctr[7])
+  |=> (prer[15:8] == $past(wb_dat_i,1));
+endproperty
+prer_hi_connectivity_assert: assert property (prer_hi_connectivity);
+
+// Alternative connectivity checks
+property prer_lo_connectivity_alt;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b00) && !ctr[7])
+  |=> (prer[7:0] == $past(wb_dat_i,1));
+endproperty
+prer_lo_connectivity_alt_assert: assert property (prer_lo_connectivity_alt);
+
+property prer_hi_connectivity_alt;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b01) && !ctr[7])
+  |=> (prer[15:8] == $past(wb_dat_i,1));
+endproperty
+prer_hi_connectivity_alt_assert: assert property (prer_hi_connectivity_alt);
+
+assert property (@(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i) (sr[4:2] == 3'b0));
+
+property iflag_management;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  ($fell(sr[1]) || $rose(sr[5])) |-> sr[0] and
+  (cr[0] && wb_we_i && wb_adr_i == 3'h4) |=> !sr[0];
+endproperty
+iflag_management_assert: assert property (iflag_management);
+
+property iflag_clear;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (cr[0] && wb_we_i && (wb_adr_i == 3'h4)) |=> !sr[0];
+endproperty
+iflag_clear_assert: assert property (iflag_clear);
+
+property TXR_ValidRWBit_v3;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  $rose(cr[2]) |-> (txr[0] inside {0,1});
+endproperty
+TXR_ValidRWBit_v3_assert: assert property (TXR_ValidRWBit_v3);
+
+
+property wb_clk_toggle_counter;
+    int count;
+    disable iff (arst_i == ARST_LVL || wb_rst_i)
+    (1, count = 0) |=> (wb_clk_i != $past(wb_clk_i), count = 0)
+    or
+    (1, count++) |=> (count < 100);
+endproperty
+wb_clk_toggle_counter_assert: assert property (wb_clk_toggle_counter);
+
+// END OF diasable iff introduction passing blocks
+
 // This assertion has been converted to non vacuous by changing value from $fell(sr[3]) -> $fell(sr[1])
 property p_rxr_valid_after_read;
   @(posedge wb_clk_i) 

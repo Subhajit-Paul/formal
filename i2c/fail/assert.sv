@@ -140,12 +140,6 @@ property p_ctr_write_connectivity_ack;
 endproperty
 p_ctr_write_connectivity_ack_assert: assert property (p_ctr_write_connectivity_ack);
 
-property p_en_safety;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
-  $fell(ctr[7]) |-> !sr[3];
-endproperty
-p_en_safety_assert: assert property (p_en_safety);
-
 property p_ien_interrupt;
   @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
   (ctr[6] && sr[0]) |-> wb_inta_o;
@@ -160,21 +154,6 @@ endproperty
 p_ctr_write_assert: assert property (p_ctr_write);
 
 // prer
-
-// Connectivity properties
-property prer_lo_connectivity;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b00) && !ctr[7])
-  |=> (prer[7:0] == $past(wb_dat_i,1));
-endproperty
-prer_lo_connectivity_assert: assert property (prer_lo_connectivity);
-
-property prer_hi_connectivity;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b01) && !ctr[7])
-  |=> (prer[15:8] == $past(wb_dat_i,1));
-endproperty
-prer_hi_connectivity_assert: assert property (prer_hi_connectivity);
 
 // Write ignore when enabled
 property prer_write_ignore_en;
@@ -191,21 +170,6 @@ property prer_stability;
   |=> (prer == $past(prer));
 endproperty
 prer_stability_assert: assert property (prer_stability);
-
-// Alternative connectivity checks
-property prer_lo_connectivity_alt;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b00) && !ctr[7])
-  |=> (prer[7:0] == $past(wb_dat_i,1));
-endproperty
-prer_lo_connectivity_alt_assert: assert property (prer_lo_connectivity_alt);
-
-property prer_hi_connectivity_alt;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (wb_cyc_i && wb_stb_i && wb_we_i && wb_ack_o && (wb_adr_i == 2'b01) && !ctr[7])
-  |=> (prer[15:8] == $past(wb_dat_i,1));
-endproperty
-prer_hi_connectivity_alt_assert: assert property (prer_hi_connectivity_alt);
 
 // rxr
 
@@ -258,7 +222,7 @@ p_rxr_update_after_read_1_assert: assert property (p_rxr_update_after_read_1);
 
 
 // sr
-assert property (@(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i) (sr[4:2] == 3'b0));
+
 
 property sr_connectivity_2;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
@@ -320,13 +284,6 @@ property tip_lifecycle;
 endproperty
 tip_lifecycle_assert: assert property (tip_lifecycle);
 
-property iflag_management;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  ($fell(sr[1]) || $rose(sr[5])) |-> sr[0] and
-  (cr[0] && wb_we_i && wb_adr_i == 3'h4) |=> !sr[0];
-endproperty
-iflag_management_assert: assert property (iflag_management);
-
 property tip_active;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (cr[3] || cr[2]) |=> sr[1];
@@ -339,11 +296,6 @@ property iflag_set;
 endproperty
 iflag_set_assert: assert property (iflag_set);
 
-property iflag_clear;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (cr[0] && wb_we_i && (wb_adr_i == 3'h4)) |=> !sr[0];
-endproperty
-iflag_clear_assert: assert property (iflag_clear);
 
 property rxack_nack;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
@@ -378,12 +330,6 @@ property TXR_Connectivity;
   (wb_cyc_i && wb_stb_i && wb_we_i && (wb_adr_i == 3'h03)) |=> (txr == $past(wb_dat_i));
 endproperty
 TXR_Connectivity_assert: assert property (TXR_Connectivity);
-
-property TXR_ValidRWBit_v3;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  $rose(cr[2]) |-> (txr[0] inside {0,1});
-endproperty
-TXR_ValidRWBit_v3_assert: assert property (TXR_ValidRWBit_v3);
 
 // wb_ack_o
 
@@ -452,15 +398,6 @@ property wb_clk_toggle_stability;
     not (##[1:$] $stable(wb_clk_i));
 endproperty
 wb_clk_toggle_stability_assert: assert property (wb_clk_toggle_stability);
-
-property wb_clk_toggle_counter;
-    int count;
-    disable iff (arst_i == ARST_LVL || wb_rst_i)
-    (1, count = 0) |=> (wb_clk_i != $past(wb_clk_i), count = 0)
-    or
-    (1, count++) |=> (count < 100);
-endproperty
-wb_clk_toggle_counter_assert: assert property (wb_clk_toggle_counter);
 
 property wb_clk_toggle_window;
     @(wb_clk_i) 
