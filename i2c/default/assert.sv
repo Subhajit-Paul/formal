@@ -1043,8 +1043,6 @@ assert property (@(posedge wb_clk_i) $bits(wb_adr_i) == 3);
 
 // wb_clk_i
 
-parameter MAX_PERIOD = 32;
-
 // Validity checks
 property wb_clk_valid_posedge;
     @(posedge wb_clk_i)
