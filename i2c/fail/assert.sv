@@ -34,6 +34,43 @@ module i2c_assertions (
         parameter ARST_LVL = 1'b0; // asynchronous reset level
         parameter MAX_PERIOD = 32;
 
+
+// EN/IEN control checks
+// sr[3] was a reserved bit changed to sr[1]. because sr[1] does TIP assignment.
+property p_en_clear_safety;
+  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
+  ($fell(ctr[7]) && sr[1]) |-> ##[1:3] !sr[1];
+endproperty
+p_en_clear_safety_assert: assert property (p_en_clear_safety);
+
+// ctr[1] was a reserved bit changed to ctr[6]. because ctr[6] is the interrupt enable bit.
+property inta_functionality;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (ctr[6] && sr[0]) |-> wb_inta_o;
+endproperty
+inta_functionality_assert: assert property (inta_functionality);
+
+// ctr[1] was a reserved bit changed to ctr[6]. sr[4] was a reserved bit changed to sr[0]. because ctr[6] is the interrupt enable bit and sr[0] This bit is set when an interrupt is pending, which will cause a processor interrupt request if the IEN bit is set.
+property inta_persistence;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (ctr[6] && sr[0]) |-> wb_inta_o throughout (ctr[6] && sr[0])[->1];
+endproperty
+inta_persistence_assert: assert property (inta_persistence);
+
+// sr[4] was a reserved bit changed to sr[0]. sr[2] was a reserved bit changed to sr[5]. Because sr[0] This bit is set when an interrupt is pending, which will cause a processor interrupt request if the IEN bit is set. sr[5] This bit is set when the core lost arbitration.
+property arbitration_loss_interrupt;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  sr[5] |-> sr[0];
+endproperty
+arbitration_loss_interrupt_assert: assert property (arbitration_loss_interrupt);
+
+// sr[2] was a reserved bit changed to sr[5]. ctr[1] was a reserved bit changed to ctr[6]. sr[5] This bit is set when the core lost arbitration. because ctr[6] is the interrupt enable bit
+property inta_arbitration_loss;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  $rose(sr[5]) && ctr[6] |=> ##[1:2] wb_inta_o;
+endproperty
+inta_arbitration_loss_assert: assert property (inta_arbitration_loss);
+
 // arst_i
 // This assertion was initially passing vacuously due to sr[3] was checked in the pre condition. However, the specifican and the RTL says sr[3] is a reserved bit and its valuse will be ZERO. So changed sr[3] -> sr[1]. Though it failed, but vacuity is gone.
 property TXR_NoWriteDuringTIP;

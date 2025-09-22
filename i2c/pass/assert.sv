@@ -32,6 +32,14 @@ module i2c_assertions (
 
        // parameters
         parameter ARST_LVL = 1'b0; // asynchronous reset level
+// control register value from ctr[1] to ctr[6] and status register value sr[4] to sr[0]. Because they were reserved bit.
+// why ctr[6] and sr[0]? -> sr[0] This bit is set when an interrupt is pending, which will cause a processor interrupt request if the IEN bit is set.
+// ctr[6] IEN, I2C core interrupt enable bit. 
+property inta_functionality_delayed;
+  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
+  (ctr[6] && sr[0]) |=> wb_inta_o;
+endproperty
+inta_functionality_delayed_assert: assert property (inta_functionality_delayed);
 
 // START OF diasable iff introduction passing blocks
 property p_en_safety;

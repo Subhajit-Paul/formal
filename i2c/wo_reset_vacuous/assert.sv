@@ -38,50 +38,17 @@ parameter MAX_PERIOD = 32;
 // Protocol condition assertions
 property start_condition;
   @(posedge wb_clk_i)  disable iff (wb_rst_i || (arst_i == ARST_LVL))
-  (cr[3] && scl_pad_o) |-> $fell(sda_pad_i);
+  (cr[7] && scl_pad_o) |-> $fell(sda_pad_i);
 endproperty
 start_condition_assert: assert property (start_condition);
 
 property stop_condition;
   @(posedge wb_clk_i)  disable iff (wb_rst_i || (arst_i == ARST_LVL))
-  (cr[2] && scl_pad_o) |-> $rose(sda_pad_i);
+  (cr[6] && scl_pad_o) |-> $rose(sda_pad_i);
 endproperty
 stop_condition_assert: assert property (stop_condition);
 
-// EN/IEN control checks
-property p_en_clear_safety;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || (arst_i == ARST_LVL))
-  ($fell(ctr[7]) && sr[3]) |-> ##[1:3] !sr[3];
-endproperty
-p_en_clear_safety_assert: assert property (p_en_clear_safety);
 
-property inta_functionality;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |-> wb_inta_o;
-endproperty
-inta_functionality_assert: assert property (inta_functionality);
 
-property inta_persistence;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |-> wb_inta_o throughout (ctr[1] && sr[4])[->1];
-endproperty
-inta_persistence_assert: assert property (inta_persistence);
 
-property arbitration_loss_interrupt;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  sr[2] |-> sr[4];
-endproperty
-arbitration_loss_interrupt_assert: assert property (arbitration_loss_interrupt);
-
-property inta_functionality_delayed;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  (ctr[1] && sr[4]) |=> wb_inta_o;
-endproperty
-inta_functionality_delayed_assert: assert property (inta_functionality_delayed);
-
-property inta_arbitration_loss;
-  @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
-  $rose(sr[2]) && ctr[1] |=> ##[1:2] wb_inta_o;
-endproperty
-inta_arbitration_loss_assert: assert property (inta_arbitration_loss);
 endmodule
