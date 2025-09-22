@@ -463,9 +463,6 @@ input_stability_assert: assert property (input_stability);
 
 // wb_dat_i
 
-parameter CTRL_RESV_MASK = 8'hFC;
-parameter CMD_RESV_MASK = 8'hE8;
-
 property wb_dat_stable_until_ack;
   @(posedge wb_clk_i) disable iff (arst_i == ARST_LVL || wb_rst_i)
   (wb_we_i && wb_stb_i && wb_cyc_i) |-> 
@@ -668,15 +665,6 @@ property ReservedBitsZero;
 endproperty
 ReservedBitsZero_assert: assume property (ReservedBitsZero);
 
-property p_rxr_write_protect_1;
-  @(posedge wb_clk_i) 
-  disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) 
-  |=> 
-  (rxr == $past(rxr));
-endproperty
-p_rxr_write_protect_1_assert: assume property (p_rxr_write_protect_1);
-
 // Command conflicts
 property NoRD_WR_Conflict;
   @(posedge wb_clk_i) (wb_adr_i == 4'h4 && wb_we_i && wb_cyc_i && wb_stb_i) |-> !(wb_dat_i[5] && wb_dat_i[4]);
@@ -768,9 +756,6 @@ we_stability_assert: assume property (we_stability);
 
 
 // wb_dat_i
-
-parameter CTRL_RESV_MASK = 8'hFC;
-parameter CMD_RESV_MASK = 8'hE8;
 
 property ctrl_reg_reserved_bits;
   @(posedge wb_clk_i) disable iff (arst_i != ARST_LVL || wb_rst_i)
@@ -1102,9 +1087,6 @@ wb_clk_stable_assert: assert property (wb_clk_stable);
 assert property (@(posedge wb_clk_i) ($bits(wb_cyc_i) == 1));
 
 // wb_dat_i
-
-parameter CTRL_RESV_MASK = 8'hFC;
-parameter CMD_RESV_MASK = 8'hE8;
 
 assert property (@(posedge wb_clk_i) $bits(wb_dat_i) == 8);
 

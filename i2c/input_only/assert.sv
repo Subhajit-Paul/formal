@@ -42,15 +42,6 @@ property ReservedBitsZero;
 endproperty
 ReservedBitsZero_assert: assume property (ReservedBitsZero);
 
-property p_rxr_write_protect_1;
-  @(posedge wb_clk_i) 
-  disable iff (wb_rst_i || arst_i == ARST_LVL)
-  (wb_adr_i == 3 && wb_we_i && wb_stb_i && wb_cyc_i) 
-  |=> 
-  (rxr == $past(rxr));
-endproperty
-p_rxr_write_protect_1_assert: assume property (p_rxr_write_protect_1);
-
 // Command conflicts
 property NoRD_WR_Conflict;
   @(posedge wb_clk_i) (wb_adr_i == 4'h4 && wb_we_i && wb_cyc_i && wb_stb_i) |-> !(wb_dat_i[5] && wb_dat_i[4]);
