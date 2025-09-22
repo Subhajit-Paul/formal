@@ -251,7 +251,7 @@ endproperty
 p_rxr_read_update_assert: assert property (p_rxr_read_update);
 
 property p_rxr_update_after_read_1;
-  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i = ARST_LVL)
+  @(posedge wb_clk_i) disable iff (wb_rst_i || arst_i == ARST_LVL)
   $rose(sr[0]) && !sr[3] |=> !$stable(rxr);
 endproperty
 p_rxr_update_after_read_1_assert: assert property (p_rxr_update_after_read_1);
